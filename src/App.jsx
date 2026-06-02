@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import TabBar from './components/TabBar'
 import AttentePage from './components/AttentePage'
 import VoeuCard from './components/VoeuCard'
@@ -7,8 +7,15 @@ import './App.css'
 
 export default function App() {
   const [tab, setTab] = useState('attente')
-  const [voeux, setVoeux] = useState({ accepte: [], attente: [], refuse: [] })
+  const [voeux, setVoeux] = useState(() => {
+    const saved = localStorage.getItem('parcoursup-voeux')
+    return saved ? JSON.parse(saved) : { accepte: [], attente: [], refuse: [] }
+  })
   const [showModal, setShowModal] = useState(false)
+
+  useEffect(() => {
+    localStorage.setItem('parcoursup-voeux', JSON.stringify(voeux))
+  }, [voeux])
 
   const addVoeu = (voeu) => {
     setVoeux(prev => ({ ...prev, [tab]: [...prev[tab], voeu] }))
@@ -22,19 +29,15 @@ export default function App() {
     }))
   }
 
-  // Déplace un vœu d'un onglet à un autre
   const moveVoeu = (index, destination) => {
     const voeu = voeux[tab][index]
     setVoeux(prev => ({
       ...prev,
       [tab]: prev[tab].filter((_, i) => i !== index),
-      [destination]: destination === 'renonce'
-        ? prev.accepte.map((v, i) => i === index ? { ...v, renonce: true } : v)
-        : [...prev[destination], { ...voeu, posActuelle: undefined, posDebut: undefined, dernierAdmis: undefined }]
+      [destination]: [...prev[destination], { ...voeu, posActuelle: undefined, posDebut: undefined, dernierAdmis: undefined }]
     }))
   }
 
-  // Marque renoncé sans changer d'onglet
   const renonceVoeu = (index) => {
     setVoeux(prev => ({
       ...prev,
