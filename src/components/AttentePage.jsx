@@ -21,6 +21,30 @@ export default function AttentePage({ voeu, index, onDelete, onMove, onEdit }) {
     setEditing(false)
   }
 
+  const statBox = (value, label, color, editable) => (
+    <div style={{
+      flex: 1, background: '#ffffff08', borderRadius: 12,
+      padding: '10px 6px', textAlign: 'center',
+      border: `1.5px solid ${color}33`
+    }}>
+      {editable && editing ? (
+        <input
+          type="number"
+          value={pos}
+          onChange={e => setPos(e.target.value)}
+          style={{
+            width: '100%', padding: '2px 4px', borderRadius: 8,
+            border: `1.5px solid ${couleur}`, background: '#ffffff11',
+            color: '#fff', fontSize: 20, fontWeight: 900, textAlign: 'center'
+          }}
+        />
+      ) : (
+        <div style={{ fontSize: 22, fontWeight: 900, color }}>{value ?? '—'}</div>
+      )}
+      <div style={{ fontSize: 10, color: '#ffffff55', marginTop: 4, lineHeight: 1.3 }}>{label}</div>
+    </div>
+  )
+
   return (
     <div style={{
       border: `2px solid ${couleur}`,
@@ -34,38 +58,19 @@ export default function AttentePage({ voeu, index, onDelete, onMove, onEdit }) {
       }}>✕</button>
 
       <div style={{ fontSize: 13, color: '#ffffff66' }}>{voeu.type}</div>
-      <div style={{ fontSize: 18, fontWeight: 800, margin: '4px 0 8px' }}>{voeu.formation}</div>
-      <div style={{ fontSize: 13, color: '#ffffffaa', marginBottom: 12 }}>📍 {voeu.lieu}</div>
+      <div style={{ fontSize: 18, fontWeight: 800, margin: '4px 0 4px' }}>{voeu.formation}</div>
+      <div style={{ fontSize: 13, color: '#ffffffaa', marginBottom: 14 }}>📍 {voeu.lieu}</div>
 
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 8 }}>
-        <div style={{ textAlign: 'center' }}>
-          {editing ? (
-            <input
-              type="number"
-              value={pos}
-              onChange={e => setPos(e.target.value)}
-              style={{
-                width: 64, padding: '4px 8px', borderRadius: 8,
-                border: '1.5px solid #6C63FF', background: '#ffffff11',
-                color: '#fff', fontSize: 18, fontWeight: 900, textAlign: 'center'
-              }}
-            />
-          ) : (
-            <div style={{ fontSize: 22, fontWeight: 900, color: couleur }}>{voeu.posActuelle}</div>
-          )}
-          <div style={{ fontSize: 10, color: '#ffffff66' }}>Position actuelle</div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 22, fontWeight: 900 }}>{posDebut}</div>
-          <div style={{ fontSize: 10, color: '#ffffff66' }}>Position initiale</div>
-        </div>
-        <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 22, fontWeight: 900, color: '#6C63FF' }}>{dernierAdmis}</div>
-          <div style={{ fontSize: 10, color: '#ffffff66' }}>Dernier admis N-1</div>
-        </div>
+      {/* Les 4 stats */}
+      <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
+        {statBox(voeu.posDebut, 'Position\ninitiale', '#ffffff88', false)}
+        {statBox(voeu.posActuelle, 'Position\nactuelle', couleur, true)}
+        {statBox(voeu.rangCandidat, 'Mon rang\nau concours', '#3ecfcf', false)}
+        {statBox(voeu.dernierAdmis, 'Dernier admis\nan dernier', '#6C63FF', false)}
       </div>
 
-      <div style={{ background: '#ffffff18', borderRadius: 8, height: 8, overflow: 'hidden', marginBottom: 8 }}>
+      {/* Barre de progression */}
+      <div style={{ background: '#ffffff18', borderRadius: 8, height: 8, overflow: 'hidden', marginBottom: 6 }}>
         <div style={{
           width: `${pct}%`, height: '100%',
           background: `linear-gradient(90deg, ${couleur}, #6C63FF)`,
@@ -77,6 +82,7 @@ export default function AttentePage({ voeu, index, onDelete, onMove, onEdit }) {
         <span>{emoji} {label}</span>
       </div>
 
+      {/* Boutons */}
       <div style={{ display: 'flex', gap: 8 }}>
         {editing ? (
           <>

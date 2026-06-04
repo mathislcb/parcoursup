@@ -3,7 +3,7 @@ import { useState } from 'react'
 export default function AddVoeuModal({ tab, onAdd, onClose }) {
   const [form, setForm] = useState({
     formation: '', type: '', lieu: '', notes: '',
-    posActuelle: '', posDebut: '', dernierAdmis: ''
+    posActuelle: '', posDebut: '', dernierAdmis: '', rangCandidat: ''
   })
 
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }))
@@ -15,6 +15,7 @@ export default function AddVoeuModal({ tab, onAdd, onClose }) {
       posActuelle: Number(form.posActuelle),
       posDebut: Number(form.posDebut),
       dernierAdmis: Number(form.dernierAdmis),
+      rangCandidat: Number(form.rangCandidat),
     })
   }
 
@@ -54,10 +55,12 @@ export default function AddVoeuModal({ tab, onAdd, onClose }) {
 
         {tab === 'attente' && <>
           <div style={{ fontSize: 13, color: '#ffffff66', marginBottom: 8 }}>📊 Liste d'attente</div>
+          <input placeholder="Ma position initiale (au début)" type="number" style={inputStyle}
+            value={form.posDebut} onChange={e => set('posDebut', e.target.value)} />
           <input placeholder="Ma position actuelle" type="number" style={inputStyle}
             value={form.posActuelle} onChange={e => set('posActuelle', e.target.value)} />
-          <input placeholder="Ma position au début" type="number" style={inputStyle}
-            value={form.posDebut} onChange={e => set('posDebut', e.target.value)} />
+          <input placeholder="Mon rang au concours" type="number" style={inputStyle}
+            value={form.rangCandidat} onChange={e => set('rangCandidat', e.target.value)} />
           <input placeholder="Dernier admis l'an dernier (rang)" type="number" style={inputStyle}
             value={form.dernierAdmis} onChange={e => set('dernierAdmis', e.target.value)} />
         </>}
